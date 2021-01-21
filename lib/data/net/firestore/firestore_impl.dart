@@ -3,22 +3,16 @@ import 'package:list_tracker_app/data/net/datasource/datasource.dart';
 import 'package:list_tracker_app/data/net/models/grocery_product.dart';
 
 class FireStoreImpl extends DataSource<GroceryProduct> {
-  final CollectionReference _groceries = FirebaseFirestore.instance.collection('groceries');
+  factory FireStoreImpl() => _singleton;
+
+  FireStoreImpl._();
+
+  static final FireStoreImpl _singleton = FireStoreImpl._();
+  final CollectionReference _groceriesCollectionReference = FirebaseFirestore.instance.collection('groceries');
 
   @override
-  Future<List<GroceryProduct>> fetchAllItems() {
-    return _groceries.get().then((QuerySnapshot value) {
-      return value?.docs
-          ?.map(
-            (QueryDocumentSnapshot e) => GroceryProduct.fromQueryDocumentSnapshot(e),
-          )
-          ?.toList();
-    });
-  }
-
-  @override
-  Stream<List<GroceryProduct>> allItems() {
-    return _groceries.snapshots().map((QuerySnapshot event) {
+  Stream<List<GroceryProduct>> allItemsStream() {
+    return _groceriesCollectionReference.snapshots().map((QuerySnapshot event) {
       return event?.docs
           ?.map(
             (QueryDocumentSnapshot e) => GroceryProduct.fromQueryDocumentSnapshot(e),
@@ -29,13 +23,12 @@ class FireStoreImpl extends DataSource<GroceryProduct> {
 
   @override
   Future<void> removeItem(GroceryProduct product) async {
-    final DocumentReference ref = _groceries.doc(product?.id);
+    final DocumentReference ref = _groceriesCollectionReference.doc(product?.id);
     await ref.delete();
   }
 
   @override
   Future<void> addItems(GroceryProduct product) async {
-    final DocumentReference ref = await _groceries.add(product?.toJson());
-    print(ref);
+    await _groceriesCollectionReference.add(product?.toJson());
   }
 }

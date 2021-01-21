@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:list_tracker_app/presentation/base/bloc/base_bloc.dart';
 
-abstract class BaseStateWithBloc<T extends StatefulWidget, B extends BaseBloc> extends State<T> {
+abstract class BaseState<T extends StatefulWidget, B extends BaseBloc> extends State<T> {
   @protected
   B bloc;
 

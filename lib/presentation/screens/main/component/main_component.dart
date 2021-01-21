@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:list_tracker_app/data/net/models/grocery_product.dart';
-import 'package:list_tracker_app/presentation/appearence/common_widgets/common_widgets.dart';
 import 'package:list_tracker_app/presentation/appearence/styles/dimens.dart';
-import 'package:list_tracker_app/presentation/base/bloc/base_bloc.dart';
-import 'package:list_tracker_app/presentation/base/state/base_state_with_bloc.dart';
+import 'package:list_tracker_app/presentation/base/state/base_state.dart';
+import 'package:list_tracker_app/presentation/common_widgets/common_widgets.dart';
 import 'package:list_tracker_app/presentation/screens/main/bloc/main_bloc.dart';
 
 class MainComponent extends StatefulWidget {
@@ -16,9 +14,7 @@ class MainComponent extends StatefulWidget {
   _MainComponentState createState() => _MainComponentState();
 }
 
-class _MainComponentState extends BaseStateWithBloc<MainComponent, MainBloc> {
-  bool _isRealtime = false;
-
+class _MainComponentState extends BaseState<MainComponent, MainBloc> {
   @override
   void initState() {
     super.initState();
@@ -28,19 +24,6 @@ class _MainComponentState extends BaseStateWithBloc<MainComponent, MainBloc> {
   @override
   Widget get appBar => AppBar(
         title: const Text('Grocery items'),
-        actions: <Widget>[
-          Switch(
-            activeColor: Colors.deepOrangeAccent,
-            value: _isRealtime,
-            onChanged: (bool data) {
-              setState(
-                () {
-                  _isRealtime = data;
-                },
-              );
-            },
-          ),
-        ],
       );
 
   @override
@@ -75,40 +58,7 @@ class _MainComponentState extends BaseStateWithBloc<MainComponent, MainBloc> {
 
   @override
   Widget getWidget(BuildContext context) {
-    return _isRealtime
-        ? _realtimeGroceries()
-        : BlocBuilder<MainBloc, BaseBlocState>(
-            builder: (BuildContext context, BaseBlocState state) {
-              final bool isAdded = state is AddGroceryState;
-              final bool isRemoved = state is RemoveGroceryState;
-              final bool isGetAll = state is GetAllGroceriesState;
-              final bool isSuccess = isAdded || isRemoved || isGetAll;
-              final List<GroceryProduct> groceries =
-                  // ignore: avoid_as
-                  isGetAll || isAdded || isRemoved
-                      ? ((state as BaseGroceriesState).products..sort(GroceryProduct.sort))
-                      : null;
-              final bool isLoading = state is LoadingState;
-              return isLoading
-                  ? loaderWidget()
-                  : (groceries?.isNotEmpty ?? false)
-                      ? AnimatedOpacity(
-                          duration: const Duration(milliseconds: 400),
-                          opacity: isSuccess ? 1 : 0,
-                          child: _productsListView(groceries),
-                        )
-                      : Container(
-                          child: Center(
-                            child: Text(
-                              'The list is empty',
-                              style: TextStyle(
-                                fontSize: textSize_16,
-                              ),
-                            ),
-                          ),
-                        );
-            },
-          );
+    return _realtimeGroceries();
   }
 
   Widget _productsListView(List<GroceryProduct> items) {
@@ -155,7 +105,7 @@ class _MainComponentState extends BaseStateWithBloc<MainComponent, MainBloc> {
 
   Widget _realtimeGroceries() {
     return StreamBuilder<List<GroceryProduct>>(
-      stream: bloc.getAllItems(),
+      stream: bloc.getAllItemsStream(),
       builder: (BuildContext context, AsyncSnapshot<List<GroceryProduct>> snapshot) {
         if (snapshot.hasError) {
           return error();
@@ -164,7 +114,18 @@ class _MainComponentState extends BaseStateWithBloc<MainComponent, MainBloc> {
           return loaderWidget();
         }
         final List<GroceryProduct> data = snapshot.data..sort(GroceryProduct.sort);
-        return _productsListView(data);
+        return (data?.isNotEmpty ?? false)
+            ? _productsListView(data)
+            : Container(
+                child: Center(
+                  child: Text(
+                    'The list is empty',
+                    style: TextStyle(
+                      fontSize: textSize_16,
+                    ),
+                  ),
+                ),
+              );
       },
     );
   }
