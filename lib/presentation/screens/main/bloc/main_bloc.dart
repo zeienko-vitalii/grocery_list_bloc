@@ -8,7 +8,10 @@ part 'main_event.dart';
 
 part 'main_state.dart';
 
+/// Bloc for Main screen
 class MainBloc extends BaseBloc {
+
+  /// Cached groceries
   final List<GroceryProduct> _groceries = <GroceryProduct>[];
 
   @override
@@ -21,6 +24,7 @@ class MainBloc extends BaseBloc {
     yield SuccessState(event);
   }
 
+  /// Fetches data in realtime
   Stream<List<GroceryProduct>> getAllItemsStream() {
     return groceryDataSourceImpl.allItemsStream().handleError(_handleError).map((List<GroceryProduct> event) {
       _groceries

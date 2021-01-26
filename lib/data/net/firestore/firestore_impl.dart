@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:list_tracker_app/data/net/datasource/datasource.dart';
 import 'package:list_tracker_app/data/net/models/grocery_product.dart';
 
+/// Singleton class that implements [DataSource] interface using Firebase source
 class FireStoreImpl extends DataSource<GroceryProduct> {
   factory FireStoreImpl() => _singleton;
 

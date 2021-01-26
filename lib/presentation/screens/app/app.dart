@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:list_tracker_app/utility/navigation/routes.dart';
 
-class App extends StatelessWidget {
+class GroceryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

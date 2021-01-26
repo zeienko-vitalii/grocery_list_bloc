@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Represents grocery product entity
 class GroceryProduct {
   const GroceryProduct({this.id, this.title, this.ms});
 
@@ -17,9 +18,6 @@ class GroceryProduct {
       };
 
   @override
-  String toString() => 'GroceryProduct(title: $title, id: $id)';
-
-  @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is GroceryProduct && other.title == title && other.id == id;
@@ -28,6 +26,10 @@ class GroceryProduct {
   @override
   int get hashCode => title.hashCode ^ id.hashCode;
 
+  @override
+  String toString() => 'GroceryProduct(title: $title, id: $id)';
+
+  /// Sorts by date
   static int sort(GroceryProduct obj1, GroceryProduct obj2) {
     if ((obj1?.ms ?? -1) < (obj2?.ms ?? -1)) {
       return -1;

@@ -10,9 +10,11 @@ part 'base_event.dart';
 
 part 'base_state.dart';
 
+/// Base abstract BloC that should be extended by other app's BloCs
 abstract class BaseBloc extends Bloc<BaseEvent, BaseBlocState> {
   BaseBloc() : super(const InitialBaseState());
 
+  /// Firebase data source that is accessible from classes taht exetnds [BaseBloc]
   @protected
   DataSource<GroceryProduct> groceryDataSourceImpl = FireStoreImpl();
 

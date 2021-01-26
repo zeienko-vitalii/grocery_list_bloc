@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:list_tracker_app/data/net/models/grocery_product.dart';
-import 'package:list_tracker_app/presentation/appearence/styles/dimens.dart';
 import 'package:list_tracker_app/presentation/base/state/base_state.dart';
 import 'package:list_tracker_app/presentation/common_widgets/common_widgets.dart';
 import 'package:list_tracker_app/presentation/screens/main/bloc/main_bloc.dart';
@@ -76,13 +74,13 @@ class _MainComponentState extends BaseState<MainComponent, MainBloc> {
 
   Padding _productItem(GroceryProduct product, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 8.h),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 8.h),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -117,11 +115,11 @@ class _MainComponentState extends BaseState<MainComponent, MainBloc> {
         return (data?.isNotEmpty ?? false)
             ? _productsListView(data)
             : Container(
-                child: Center(
+                child: const Center(
                   child: Text(
                     'The list is empty',
                     style: TextStyle(
-                      fontSize: textSize_16,
+                      fontSize: 16,
                     ),
                   ),
                 ),

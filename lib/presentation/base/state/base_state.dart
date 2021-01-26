@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:list_tracker_app/presentation/base/bloc/base_bloc.dart';
 
+/// Base State class is for all Stateful widets' states for easier accessing bloc, if it's provided by parent widget
 abstract class BaseState<T extends StatefulWidget, B extends BaseBloc> extends State<T> {
   @protected
   B bloc;
