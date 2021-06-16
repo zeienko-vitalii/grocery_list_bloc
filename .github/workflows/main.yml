@@ -1,36 +1,41 @@
 # This is a basic workflow to help you get started with Actions
-
-name: CI
-
+name: Android CI
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ feature/ci ]
-  pull_request:
-    branches: [ feature/ci ]
+    branches: [master, feature/ci]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+# Allows you to run this workflow manually from the Actions tab
+workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    name: Build Release AppBundle
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '8.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
+      - run: flutter pub get
+      - name: Flutter build appbundle
+        run: flutter build appbundle --release 
+      - uses: actions/setup-ruby@v1
+        with: 
+          ruby-version: '2.7.2'
+      # - name: Fastlane Action
+      #   env:
+      #     JSON_KEY_DATA: ${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_API_KEY_JSON}}
+      #   uses: maierj/fastlane-action@v2.0.1
+      #   with:
+      #     lane: deploy
+      #     subdirectory: 'consumer-app/android'
