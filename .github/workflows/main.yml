@@ -30,11 +30,11 @@ jobs:
         run: flutter build appbundle --release 
       - uses: actions/setup-ruby@v1
         with: 
-          ruby-version: '2.7.2'
+          ruby-version: '2.7'
       # - name: Fastlane Action
       #   env:
       #     JSON_KEY_DATA: ${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_API_KEY_JSON}}
       #   uses: maierj/fastlane-action@v2.0.1
       #   with:
       #     lane: deploy
-      #     subdirectory: 'consumer-app/android'
+          # subdirectory: 'consumer-app/android'
